@@ -89,10 +89,9 @@ try:
   outputFile = args.volume+'/tunedDiscr.jobID_%s'%str(job_id).zfill(4) if args.volume else 'test.jobId_%s'%str(job_id).zfill(4)
 
   targets = [
-                ('tight_cutbased' , 'T0HLTElectronT2CaloTight'  ),
-                ('medium_cutbased', 'T0HLTElectronT2CaloMedium' ),
-                ('loose_cutbased' , 'T0HLTElectronT2CaloLoose'  ),
-                ('vloose_cutbased', 'T0HLTElectronT2CaloVLoose' ),
+                ('tight_cutbased' , 'T0HLTPhotonT2CaloTight'  ),
+                ('medium_cutbased', 'T0HLTPhotonT2CaloMedium' ),
+                ('loose_cutbased' , 'T0HLTPhotonT2CaloLoose'  ),
                 ]
 
 
