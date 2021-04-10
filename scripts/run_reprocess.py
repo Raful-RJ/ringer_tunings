@@ -32,9 +32,9 @@ parser.add_argument('-v', '--volume', action='store',
         dest='volume', required = True, default = None,
             help = "The output path")
 
-parser.add_argument('-s', '--step', action='store',
-        dest='step', required = True, default = 'fastcalo',
-            help = "The step level. (fastcalo, fastelectron, fastphoton, hlt, offline)")
+parser.add_argument('-p', '--proc', action='store',
+        dest='proc', required = True, default = 'r0',
+            help = "The process (usually tagged as r0, r1, ...).")
 
 
 
@@ -56,7 +56,7 @@ def check(path):
 if check(args.volume) and command("cd %s"%args.volume):
 
 
-  if check('%s/ringer'%args.volume):
+  if check('%s/ringer_tunings'%args.volume):
     command('rm -rf ringer')
 
 
@@ -69,13 +69,12 @@ if check(args.volume) and command("cd %s"%args.volume):
   if check('%s/mylog.log'%args.volume):
     command('rm mylog.log')
 
-  if not command("git clone https://github.com/jodafons/ringer_tunings.git && cd ringer && git checkout %s && cd .."%(args.branch)):
+  if not command("git clone https://github.com/ringer-atlas/ringer_tunings.git && cd ringer_tunings && git checkout %s && cd .."%(args.branch)):
     print("Its not possible to set the branch(%s) into the ringer repository"%args.branch)
     sys.exit(1)
 
-  tag = args.tag.replace('-','/')
-  command("python ringer_tunings/versions/%s/%s/job_reprocess.py -d %s -v %s -f %s -r %s"%(args.step, tag, args.dataFile, args.volume, args.tunedFile, args.refFile) )
-  command('rm -rf ringer')
+  command("python ringer_tunings/versions/%s/%s/job_reprocess.py -d %s -v %s -f %s -r %s"%(args.tag, args.proc, args.dataFile, args.volume, args.tunedFile, args.refFile) )
+  command('rm -rf ringer_tunings')
 
   sys.exit(0)
 else:
