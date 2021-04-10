@@ -8,7 +8,7 @@ import argparse
 import sys,os
 import numpy as np
 
-path = '/home/juan.marin/datasets/npz/mc16_13TeV/offline.v2/*.npz'
+path = '/home/rafael.vianna/dataset/npz/newTruth/*.npz'
 
 from Gaugi import expandFolders
 fileList = expandFolders(path)
