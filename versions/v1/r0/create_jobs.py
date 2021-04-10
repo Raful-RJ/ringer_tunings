@@ -17,7 +17,7 @@ def get_model(neuron_min, neuron_max):
 
 
 n_min_neuron = 2
-n_max_neuron = 10
+n_max_neuron = 5
 
 create_jobs( 
         models       = get_model(neuron_min=n_min_neuron,
@@ -27,5 +27,5 @@ create_jobs(
         sortBounds    = 10,
         nSortsPerJob  = 1,
         nModelsPerJob = 1,
-        outputFolder  = 'job_config.Zrad_v1.n2to10.10sorts.10inits.r0',
+                outputFolder  = 'job_config.Zrad_v1.n2to5.10sorts.10inits.r0',
         )
