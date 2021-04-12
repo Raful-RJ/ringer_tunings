@@ -23,10 +23,14 @@ ref_target = [
               #('medium_v6'      , 'T0HLTElectronRingerMedium_v6'    ),
               #('loose_v6'       , 'T0HLTElectronRingerLoose_v6'     ),
               #('vloose_v6'      , 'T0HLTElectronRingerVeryLoose_v6' ),
-              ('tight_cutbased' , 'T0HLTElectronT2CaloTight'        ),
-              ('medium_cutbased', 'T0HLTElectronT2CaloMedium'       ),
-              ('loose_cutbased' , 'T0HLTElectronT2CaloLoose'        ),
-              ('vloose_cutbased', 'T0HLTElectronT2CaloVLoose'       ),
+              #('tight_cutbased' , 'T0HLTElectronT2CaloTight'        ),
+              #('medium_cutbased', 'T0HLTElectronT2CaloMedium'       ),
+              #('loose_cutbased' , 'T0HLTElectronT2CaloLoose'        ),
+              #('vloose_cutbased', 'T0HLTElectronT2CaloVLoose'       ),
+              ('tight_cutbased' , 'T0HLTPhotonT2CaloTight'        ),
+              ('medium_cutbased', 'T0HLTPhotonT2CaloMedium'       ),
+              ('loose_cutbased' , 'T0HLTPhotonT2CaloLoose'        ),
+              #('vloose_cutbased', 'T0HLTPhotonT2CaloVLoose'       )
               ]
 
 
