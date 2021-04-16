@@ -11,7 +11,7 @@ from tensorflow import keras
 # function to define the keras model
 def get_model(neuron_min, neuron_max, model):
   modelCol = []
-
+  model.trainable = False
   for n in range(neuron_min,neuron_max+1):
 
     base_inputs = model.layers[0].input
@@ -19,10 +19,10 @@ def get_model(neuron_min, neuron_max, model):
     inter_layer = layers.Dense(n,activation = 'tanh', name = 'second_hidden_layer')(base_outputs)                     
     final_dense_layer = layers.Dense(1, activation = 'linear', name = 'final_Dense_Layer')(inter_layer)
     final_outputs = layers.Activation('tanh', name='output_for_training')(final_dense_layer)
-                  
     new_model = keras.Model(inputs=base_inputs, outputs=final_outputs)
-    new_model.trainable = False
-    new_model.layers[-3].trainable = True
+    new_model.layers[-2].trainable, new_model.layers[-3].trainable = True, True
+    #new_model.trainable = False
+    #new_model.layers[-3].trainable = True
     
     modelCol.append(new_model)
   return modelCol
