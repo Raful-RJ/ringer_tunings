@@ -19,10 +19,32 @@ def getPatterns( path, cv, sort):
       return data/norms[:,None]
 
   from Gaugi import load
-  d = load(path)
-  data = norm1(d['data'][:,1:101])
-  target = d['target']
+  raw = load(path)
+  data = raw['data']
+  target = raw['target']
   target[target!=1]=-1
+  features=raw['features']
+  sgnData = data[target==1]
+  bkgData = data[target!=1]
+  featIndex = np.where(features=='mc_type')[0][0]
+  s = []
+  b = []
+  for i in range(len(sgnData)):
+    if sgnData[i,featIndex]==14 or sgnData[i,featIndex]==15 or sgnData[i,featIndex]==13:
+      s.append(sgnData[i,:])
+
+  for i in range(len(bkgData)):
+    if bkgData[i,featIndex]!=14 and bkgData[i,featIndex]!=15 and bkgData[i,featIndex]!=13:
+      b.append(bkgData[i,:])
+  
+  s = np.asarray(s)
+  b = np.asarray(b)
+  data = np.concatenate((s,b),axis=0)
+  target = np.concatenate((np.ones(len(s)), np.zeros(len(b)))) 
+  target[target!=1]=-1
+
+  data = norm1(data[:,1:101])
+  
   splits = [(train_index, val_index) for train_index, val_index in cv.split(data,target)]
 
   x_train = data [ splits[sort][0]]
@@ -88,10 +110,24 @@ try:
 
   outputFile = args.volume+'/tunedDiscr.jobID_%s'%str(job_id).zfill(4) if args.volume else 'test.jobId_%s'%str(job_id).zfill(4)
 
-  targets = [
-                ('tight_cutbased' , 'T0HLTPhotonT2CaloTight'  ),
-                ('medium_cutbased', 'T0HLTPhotonT2CaloMedium' ),
-                ('loose_cutbased' , 'T0HLTPhotonT2CaloLoose'  ),
+  targets = [   ('t2calo_tight_cutbased' , 'T0HLTPhotonT2CaloTight'  ),
+                ('t2calo_medium_cutbased', 'T0HLTPhotonT2CaloMedium' ),
+                ('t2calo_loose_cutbased' , 'T0HLTPhotonT2CaloLoose'  ),
+                ('hlt_tight_cutbased' , 'trig_EF_ph_tight'        ),
+                ('hlt_medium_cutbased', 'trig_EF_ph_medium'       ),
+                ('hlt_loose_cutbased' , 'trig_EF_ph_loose'        ),
+              ('rlx20_hlt_tight_cutbased' , 'trig_EF_ph_tight'        ),
+              ('rlx20_hlt_medium_cutbased', 'trig_EF_ph_medium'       ),
+              ('rlx20_hlt_loose_cutbased' , 'trig_EF_ph_loose'        ),
+              ('rlx30_hlt_tight_cutbased' , 'trig_EF_ph_tight'        ),
+              ('rlx30_hlt_medium_cutbased', 'trig_EF_ph_medium'       ),
+              ('rlx30_hlt_loose_cutbased' , 'trig_EF_ph_loose'        ),
+              ('rlx40_hlt_tight_cutbased' , 'trig_EF_ph_tight'        ),
+              ('rlx40_hlt_medium_cutbased', 'trig_EF_ph_medium'       ),
+              ('rlx40_hlt_loose_cutbased' , 'trig_EF_ph_loose'        ),
+              ('rlx50_hlt_tight_cutbased' , 'trig_EF_ph_tight'        ),
+              ('rlx50_hlt_medium_cutbased', 'trig_EF_ph_medium'       ),
+              ('rlx50_hlt_loose_cutbased' , 'trig_EF_ph_loose'        ),
                 ]
 
 
@@ -104,17 +140,57 @@ try:
   from saphyra import PatternGenerator
 
   # Create the panda job
-  job = BinaryClassificationJob(
-                    PatternGenerator( args.dataFile, getPatterns ),
-                    StratifiedKFold(n_splits=10, random_state=512, shuffle=True),
-                    job               = args.configFile,
-                    loss              = 'mean_squared_error',
-                    metrics           = ['accuracy'],
-                    epochs            = 5000,
-                    callbacks         = [sp(patience=25, verbose=True, save_the_best=True)],
-                    outputFile        = outputFile
-                    )
 
+  def plot_nn_histograms( context ): 
+    x_val, y_val = context.getHandler("valData") 
+    model = context.getHandler( "model" ) 
+    history = context.getHandler( "history" ) 
+    threshold = history['reference']['rlx30_hlt_loose_cutbased']['threshold_val']
+    y_pred_val = model.predict( x_val ) 
+    sgn_pred_val =  y_pred_val[y_val==1] 
+    bkg_pred_val =  y_pred_val[y_val==-1] 
+    import matplotlib.pyplot as plt
+    plt.hist(sgn_pred_val, color='blue', bins=50, alpha=0.5)
+    plt.hist(bkg_pred_val, color='red', bins = 50,alpha=0.5)
+    plt.xlabel(str(threshold))
+    plt.yscale('log')
+    plt.savefig('hist_tunning_medium.png')
+
+
+  from tensorflow.keras.models import Sequential
+  from tensorflow.keras.layers import Dense, Dropout, Activation, Conv1D, Flatten
+
+  # model = Sequential()
+  # model.add(Dense(2, input_shape=(100,), activation='tanh'))
+  # model.add(Dense(1, activation='linear'))
+  # model.add(Activation('tanh'))
+  # from tensorflow.keras import layers
+  # import tensorflow as tf
+  # input = layers.Input(shape=(100,), name = 'Input') # 0
+  # input_reshape = layers.Reshape((100,1), name='Reshape_layer')(input)
+  # conv = layers.Conv1D(4, kernel_size = 2, activation='relu', name = 'conv1d_layer_1')(input_reshape) # 1
+  # conv = layers.Conv1D(8, kernel_size = 2, activation='relu', name = 'conv1d_layer_2')(conv) # 2
+  # conv = layers.Flatten(name='flatten')(conv) # 3
+  # dense = layers.Dense(16, activation='relu', name='dense_layer')(conv) # 4
+  # dense = layers.Dense(1,activation='linear', name='output_for_inference')(dense) # 5
+  # output = layers.Activation('sigmoid', name='output_for_training')(dense) # 6
+  # model = tf.keras.Model(input, output, name = "model")
+
+  job = BinaryClassificationJob(
+                      PatternGenerator( args.dataFile, getPatterns ),
+                      StratifiedKFold(n_splits=10, random_state=512, shuffle=True),
+                      job               = args.configFile,
+                      # sorts             = [0],
+                      # inits             = 1,
+                      loss              = 'mse',
+                      metrics           = ['accuracy'],
+                      epochs            = 5000,
+                      callbacks         = [sp(patience=25, verbose=True, save_the_best=True)],
+                      outputFile        = outputFile,                   
+                      # class_weight      = True,
+                      # plots             = [plot_nn_histograms],
+                      )
+    
   job.decorators += decorators
   # Run it!
   job.run()
