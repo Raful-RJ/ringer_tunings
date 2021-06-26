@@ -41,6 +41,11 @@ parser.add_argument('--extraArgs', action='store',
             help = "Include extra args in the end of the tuning command.")
 
 
+parser.add_argument('-u','--git_user', action='store',
+        dest='git_user', required = False, default = 'ringer-atlas',
+            help = "Github accont repository.")
+
+
 
 if len(sys.argv)==1:
   parser.print_help()
@@ -71,7 +76,7 @@ if check(args.volume) and command("cd %s"%args.volume):
   if check('%s/mylog.log'%args.volume):
     command('rm mylog.log')
 
-  if not command("git clone https://github.com/ringer-atlas/ringer_tunings.git && cd ringer_tunings && git checkout %s && cd .."%(args.branch)):
+  if not command("git clone https://github.com/%s/ringer_tunings.git && cd ringer_tunings && git checkout %s && cd .."%(args.git_user,args.branch)):
     print("Its not possible to set the branch(%s) into the ringer tunings repository"%args.branch)
     sys.exit(1)
 
