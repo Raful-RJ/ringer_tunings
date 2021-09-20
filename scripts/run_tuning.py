@@ -42,7 +42,7 @@ parser.add_argument('--extraArgs', action='store',
 
 
 parser.add_argument('-u','--git_user', action='store',
-        dest='git_user', required = False, default = 'ringer-atlas',
+        dest='git_user', required = False, default = 'ringer-softwares',
             help = "Github accont repository.")
 
 
@@ -76,13 +76,13 @@ if check(args.volume) and command("cd %s"%args.volume):
   if check('%s/mylog.log'%args.volume):
     command('rm mylog.log')
 
-  if not command("git clone https://github.com/%s/ringer_tunings.git && cd ringer_tunings && git checkout %s && cd .."%(args.git_user,args.branch)):
+  if not command("git clone https://github.com/%s/models_scripts.git && cd models_scripts && git checkout %s && cd .."%(args.git_user,args.branch)):
     print("Its not possible to set the branch(%s) into the ringer tunings repository"%args.branch)
     sys.exit(1)
 
-  command("python ringer_tunings/versions/%s/%s/job_tuning.py -d %s -v %s -c %s -r %s %s"%( args.tag, args.proc, args.dataFile, args.volume, \
+  command("python models_scripts/versions/%s/%s/job_tuning.py -d %s -v %s -c %s -r %s %s"%( args.tag, args.proc, args.dataFile, args.volume, \
                                                                                             args.configFile, args.refFile, args.extraArgs) )
-  command('rm -rf ringer_tunings')
+  command('rm -rf models_scripts')
 
   sys.exit(0)
 
