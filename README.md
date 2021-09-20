@@ -1,5 +1,5 @@
 
-# The ringer tuning repository
+# Models scripts repository
 
 In 2017 the ATLAS experiment implemented an ensemble of neural networks
 (NeuralRinger algorithm) dedicated to improving the performance of filtering
@@ -97,8 +97,8 @@ discriminating patterns.
 
 ## Packages:
 
-- `saphyra`: Tuning package used to derive the ringer (see [here](https://github.com/jodafons/saphyra));
-- `prometheus`: The ATLAS analysis framework to test the tuning (see [here](https://github.com/jodafons/prometheus));
+- `saphyra`: Tuning package used to derive the ringer;
+- `kepler`: The ATLAS analysis framework to test the tuning;
 
 
 
