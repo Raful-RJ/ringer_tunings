@@ -95,16 +95,7 @@ try:
   targets = [
                 ('tight_cutbased' , 'T0HLTPhotonT2CaloTight'  ),
                 ('medium_cutbased', 'T0HLTPhotonT2CaloMedium' ),
-                ('loose_cutbased' , 'T0HLTPhotonT2CaloLoose'  ),
-                ('rlx75_hlt_tight_cutbased' , 'trig_EF_ph_tight'        ),
-                ('rlx75_hlt_medium_cutbased', 'trig_EF_ph_medium'       ),
-                ('rlx75_hlt_loose_cutbased' , 'trig_EF_ph_loose'        ),
-                ('rlx80_hlt_tight_cutbased' , 'trig_EF_ph_tight'        ),
-                ('rlx80_hlt_medium_cutbased', 'trig_EF_ph_medium'       ),
-                ('rlx80_hlt_loose_cutbased' , 'trig_EF_ph_loose'        ),
-                ('rlx85_hlt_tight_cutbased' , 'trig_EF_ph_tight'        ),
-                ('rlx85_hlt_medium_cutbased', 'trig_EF_ph_medium'       ),
-                ('rlx85_hlt_loose_cutbased' , 'trig_EF_ph_loose'        )
+                ('loose_cutbased' , 'T0HLTPhotonT2CaloLoose'  )
                 ]
 
 
