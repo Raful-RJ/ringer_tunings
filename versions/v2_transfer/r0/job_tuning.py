@@ -7,6 +7,7 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1" #(or "1" or "2")
 try:
   from tensorflow.compat.v1 import ConfigProto
   from tensorflow.compat.v1 import InteractiveSession
+  from tensorflow.keras     import optimizers
   config = ConfigProto()
   config.gpu_options.allow_growth = True
   session = InteractiveSession(config=config)
@@ -113,6 +114,7 @@ try:
                     StratifiedKFold(n_splits=10, random_state=512, shuffle=True),
                     job               = args.configFile,
                     loss              = 'mean_squared_error',
+                    optimizer         = optimizers.Adam(1e-5),
                     metrics           = ['accuracy'],
                     epochs            = 5000,
                     callbacks         = [sp(patience=25, verbose=True, save_the_best=True)],
